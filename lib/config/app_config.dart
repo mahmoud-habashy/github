@@ -1,4 +1,5 @@
 class AppConfig {
+  static const String appName = "Github";
   static const String baseUrl = "https://api.github.com";
 
   static const String getUserByNameUrl = "$baseUrl/users";
