@@ -1,9 +1,11 @@
+import 'package:github/shared/app_strings.dart';
+
 String? isValidUserName(String? userName) {
   userName = userName?.trim();
   if (userName == null || userName.isEmpty) {
-    return "User name is required";
+    return AppStrings.requiredUserNameMessage;
   } else if (userName.length < 3) {
-    return "please enter valid user name.";
+    return AppStrings.invalidUserNameMessage;
   }
   return null;
 }

@@ -1,3 +1,4 @@
+import 'package:github/config/app_config.dart';
 import 'package:intl/intl.dart';
 
 class AppGlobal {
@@ -17,7 +18,7 @@ class AppGlobal {
     String result = "";
     DateTime? date = parseDate(stringDate);
     if (date != null) {
-      result = DateFormat("MMM d, yyyy").format(date);
+      result = DateFormat(AppConfig.repoDateFormat).format(date);
     }
     return result;
   }

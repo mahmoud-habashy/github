@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:github/shared/app_strings.dart';
 import 'package:http/http.dart' as http;
 
 enum RequestMethod { get, post, put, delete }
@@ -28,7 +29,7 @@ class HttpService {
         throw response.body;
       }
     } catch (err) {
-      String message = "Please check your internet connection.";
+      String message = AppStrings.checkInternetErrorMessage;
       try {
         Map<String, dynamic> jsonMessage =
             jsonDecode(err.toString()) as Map<String, dynamic>;

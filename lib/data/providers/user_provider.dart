@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github/data/models/user_model.dart';
 import 'package:github/data/providers/recent_search_provider.dart';
 import 'package:github/data/repositories/user_repository.dart';
+import 'package:github/shared/app_strings.dart';
 
 final selectedUserProvider =
     StateNotifierProvider<_SelectedUserDataNotifier, UserModel?>(
@@ -33,7 +34,8 @@ class _UserStateNotifier extends StateNotifier<UserState> {
         state = UserState(userModel: data, isLoading: false);
         result = true;
       } else {
-        state = UserState(isLoading: false, errorMessage: "Error ocurred");
+        state = UserState(
+            isLoading: false, errorMessage: AppStrings.errorTitleText);
       }
     } catch (err) {
       state = UserState(isLoading: false, errorMessage: err.toString());

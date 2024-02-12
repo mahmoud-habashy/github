@@ -6,6 +6,8 @@ class AppConfig {
   static const String getUserReposUrl = "$baseUrl/users";
 
   static const int reposCountPerPage = 30;
+
+  static const String repoDateFormat = "MMM d, yyyy";
 }
 
 class AppSharedPreferencesKeys {
