@@ -64,7 +64,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
       bool result = await ref
           .read(userProvider.notifier)
-          .getUserByName(_searchController.text);
+          .getUserByName(_searchController.text.trim());
 
       _lockSubmitBtn = false;
 
