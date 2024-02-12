@@ -12,11 +12,12 @@ class _RepoStateNotifier extends StateNotifier<RepoState> {
   Future<void> getReposByUserName(String userName, int page) async {
     try {
       state = RepoState(isLoading: true, repos: state.repos);
-      List<RepoModel> result =
-          await RepoRepository.getReposByUserName(userName: userName, page: page);
+      List<RepoModel> result = await RepoRepository.getReposByUserName(
+          userName: userName, page: page);
 
       state = RepoState(isLoading: false, repos: [...state.repos, ...result]);
     } catch (err) {
+      if (!mounted) return;
       state = RepoState(
           isLoading: false, repos: state.repos, errorMessage: err.toString());
     }
