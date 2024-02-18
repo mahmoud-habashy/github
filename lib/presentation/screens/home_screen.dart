@@ -37,8 +37,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   final FocusNode _searchFocusNode = FocusNode();
 
   bool _lockSubmitBtn = false;
-  bool _hasRecentSearch = false;
-  UserState? _userState;
 
   @override
   void initState() {
@@ -77,26 +75,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
   }
 
-  Widget _getContent() {
-    if (_userState != null && _userState!.errorMessage != null) {
-      return ErrorState(
-          title: AppStrings.errorTitleText,
-          subtitle: _userState!.errorMessage!,
-          onRefresh: _search);
-    }
-    if (_hasRecentSearch) {
-      return const RecentSearchState();
-    }
-    return EmptySearchState(
-      isPrimaryBtnActive: !_lockSubmitBtn && _searchController.text.isNotEmpty,
-      onPrimaryBtnPressed: _search,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    _hasRecentSearch = ref.watch(storedUserDataProvider).isNotEmpty;
-    _userState = ref.watch(userProvider);
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -119,10 +99,46 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
             ),
-            Expanded(child: _getContent()),
+            Expanded(
+                child: _HomeScreenContent(
+              userState: ref.watch(userProvider),
+              hasRecentSearch: ref.watch(storedUserDataProvider).isNotEmpty,
+              search: _search,
+              isPrimaryBtnActive:
+                  !_lockSubmitBtn && _searchController.text.isNotEmpty,
+            )),
           ],
         )),
       ),
+    );
+  }
+}
+
+class _HomeScreenContent extends StatelessWidget {
+  final UserState? userState;
+  final bool hasRecentSearch;
+  final VoidCallback search;
+  final bool isPrimaryBtnActive;
+  const _HomeScreenContent(
+      {required this.userState,
+      required this.hasRecentSearch,
+      required this.search,
+      required this.isPrimaryBtnActive});
+
+  @override
+  Widget build(BuildContext context) {
+    if (userState != null && userState!.errorMessage != null) {
+      return ErrorState(
+          title: AppStrings.errorTitleText,
+          subtitle: userState!.errorMessage!,
+          onRefresh: search);
+    }
+    if (hasRecentSearch) {
+      return const RecentSearchState();
+    }
+    return EmptySearchState(
+      isPrimaryBtnActive: isPrimaryBtnActive,
+      onPrimaryBtnPressed: search,
     );
   }
 }

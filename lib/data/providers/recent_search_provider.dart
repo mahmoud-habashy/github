@@ -5,15 +5,17 @@ import 'package:github/data/repositories/recent_search_repository.dart';
 
 final storedUserDataProvider =
     StateNotifierProvider<_StoredUserDataNotifier, List<UserModel>>(
-        (ref) => _StoredUserDataNotifier());
+        (ref) => _StoredUserDataNotifier(ref: ref));
 
 class _StoredUserDataNotifier extends StateNotifier<List<UserModel>> {
-  _StoredUserDataNotifier() : super([]);
+  Ref ref;
+  _StoredUserDataNotifier({required this.ref}) : super([]);
 
   Future<void> fetchRecentSearch() async {
     try {
       List<UserModel> recentSearchResults =
-          await RecentSearchRepository.fetchRecentSearch();
+          await ref.watch(recentSearchRepositoryProvider).fetchRecentSearch();
+
       state = recentSearchResults;
     } catch (err) {
       debugPrint("Error while fetching recent search data");
@@ -23,7 +25,10 @@ class _StoredUserDataNotifier extends StateNotifier<List<UserModel>> {
 
   Future<void> addRecentSearch(UserModel userModel) async {
     try {
-      bool result = await RecentSearchRepository.addRecentSearch(userModel);
+      bool result = await ref
+          .watch(recentSearchRepositoryProvider)
+          .addRecentSearch(userModel);
+
       if (result) {
         List<UserModel> updatedRecentSearch = [...state];
         updatedRecentSearch.removeWhere(
@@ -38,7 +43,10 @@ class _StoredUserDataNotifier extends StateNotifier<List<UserModel>> {
 
   Future<void> removeRecentSearch(UserModel userModel) async {
     try {
-      bool result = await RecentSearchRepository.removeRecentSearch(userModel);
+      bool result = await ref
+          .watch(recentSearchRepositoryProvider)
+          .removeRecentSearch(userModel);
+
       if (result) {
         List<UserModel> updatedRecentSearch = [...state];
         updatedRecentSearch.removeWhere(
@@ -52,7 +60,9 @@ class _StoredUserDataNotifier extends StateNotifier<List<UserModel>> {
 
   Future<void> resetRecentSearch() async {
     try {
-      bool result = await RecentSearchRepository.resetRecentSearch();
+      bool result =
+          await ref.watch(recentSearchRepositoryProvider).resetRecentSearch();
+
       if (result) {
         state = [];
       }

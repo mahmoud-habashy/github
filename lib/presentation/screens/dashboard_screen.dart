@@ -67,40 +67,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     }
   }
 
-  Widget _getContent(RepoState repoState) {
-    _hasError = false;
-    if (repoState.errorMessage != null) {
-      _hasError = true;
-      return SliverToBoxAdapter(
-        child: Container(
-          margin: const EdgeInsets.symmetric(
-              vertical: AppConstants.defaultMargin * 2),
-          child: ErrorState(
-              title: AppStrings.errorTitleText,
-              subtitle: repoState.errorMessage!,
-              onRefresh: _fetchRepos),
-        ),
-      );
-    }
-    return SliverPadding(
-      padding: const EdgeInsets.only(bottom: AppConstants.defaultPadding),
-      sliver: SliverList(
-        delegate: SliverChildBuilderDelegate((context, index) {
-          return Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: AppConstants.defaultPadding),
-            margin: const EdgeInsets.symmetric(
-                vertical: AppConstants.marginElement * 2),
-            child: RepoCard(repoModel: repoState.repos[index]),
-          );
-        }, childCount: repoState.repos.length),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     RepoState repoState = ref.watch(reposProvider);
+    _hasError = repoState.errorMessage != null;
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -135,7 +105,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         child: UserDetails(),
                       ),
                     ),
-                    _getContent(repoState)
+                    _DashboardScreenContent(
+                      repoState: repoState,
+                      onRefresh: _fetchRepos,
+                    ),
                   ],
                 ),
               ),
@@ -157,6 +130,43 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               )
             ],
           )),
+    );
+  }
+}
+
+class _DashboardScreenContent extends StatelessWidget {
+  final RepoState repoState;
+  final VoidCallback onRefresh;
+  const _DashboardScreenContent(
+      {required this.repoState, required this.onRefresh});
+
+  @override
+  Widget build(BuildContext context) {
+    if (repoState.errorMessage != null) {
+      return SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+              vertical: AppConstants.defaultPadding * 2),
+          child: ErrorState(
+              title: AppStrings.errorTitleText,
+              subtitle: repoState.errorMessage!,
+              onRefresh: onRefresh),
+        ),
+      );
+    }
+    return SliverPadding(
+      padding: const EdgeInsets.only(bottom: AppConstants.defaultPadding),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate((context, index) {
+          return Container(
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppConstants.defaultPadding),
+            margin: const EdgeInsets.symmetric(
+                vertical: AppConstants.marginElement * 2),
+            child: RepoCard(repoModel: repoState.repos[index]),
+          );
+        }, childCount: repoState.repos.length),
+      ),
     );
   }
 }

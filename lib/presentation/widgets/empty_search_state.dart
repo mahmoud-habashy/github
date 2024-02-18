@@ -34,9 +34,9 @@ class EmptySearchState extends StatelessWidget {
                 height: AppConstants.containerElement * 22,
                 child: Lottie.asset(AppAssets.searchEmptyStateAnimation,
                     repeat: true)),
-            Container(
-              margin: const EdgeInsets.symmetric(
-                  vertical: AppConstants.defaultMargin * 2),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                  vertical: AppConstants.defaultPadding * 2),
               child: PrimaryButton(
                 isActive: isPrimaryBtnActive,
                 text: AppStrings.emptySearchStateBtnText,

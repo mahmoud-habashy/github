@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github/shared/app_strings.dart';
 import 'package:http/http.dart' as http;
 
 enum RequestMethod { get, post, put, delete }
 
 class HttpService {
-  static Future<String?> sendHttpRequest(
+  Future<String?> sendHttpRequest(
       {required RequestMethod method,
       required String url,
       String? body}) async {
@@ -41,3 +42,5 @@ class HttpService {
     }
   }
 }
+
+final httpServiceProvider = Provider<HttpService>((ref) => HttpService());

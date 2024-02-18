@@ -1,12 +1,18 @@
 import 'dart:convert';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:github/data/providers/local_storage_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:github/data/models/user_model.dart';
 import 'package:github/config/app_config.dart';
 
 class RecentSearchRepository {
-  static Future<List<UserModel>> fetchRecentSearch() async {
-    final SharedPreferences pref = await SharedPreferences.getInstance();
+  Ref ref;
+  RecentSearchRepository({required this.ref});
+  Future<List<UserModel>> fetchRecentSearch() async {
+    final SharedPreferences pref =
+        await ref.read(sharedPreferencesProvider.future);
+
     final List<String> result =
         pref.getStringList(AppSharedPreferencesKeys.recentSearch) ?? [];
     List<UserModel> userModels = result
@@ -15,8 +21,9 @@ class RecentSearchRepository {
     return userModels;
   }
 
-  static Future<bool> addRecentSearch(UserModel userModel) async {
-    final SharedPreferences pref = await SharedPreferences.getInstance();
+  Future<bool> addRecentSearch(UserModel userModel) async {
+    final SharedPreferences pref =
+        await ref.read(sharedPreferencesProvider.future);
     final List<String> storedData =
         pref.getStringList(AppSharedPreferencesKeys.recentSearch) ?? [];
 
@@ -34,8 +41,9 @@ class RecentSearchRepository {
         AppSharedPreferencesKeys.recentSearch, userModelsAsString);
   }
 
-  static Future<bool> removeRecentSearch(UserModel userModel) async {
-    final SharedPreferences pref = await SharedPreferences.getInstance();
+  Future<bool> removeRecentSearch(UserModel userModel) async {
+    final SharedPreferences pref =
+        await ref.read(sharedPreferencesProvider.future);
     final List<String> storedData =
         pref.getStringList(AppSharedPreferencesKeys.recentSearch) ?? [];
 
@@ -51,8 +59,12 @@ class RecentSearchRepository {
         AppSharedPreferencesKeys.recentSearch, userModelsAsString);
   }
 
-  static Future<bool> resetRecentSearch() async {
-    final SharedPreferences pref = await SharedPreferences.getInstance();
+  Future<bool> resetRecentSearch() async {
+    final SharedPreferences pref =
+        await ref.read(sharedPreferencesProvider.future);
     return await pref.remove(AppSharedPreferencesKeys.recentSearch);
   }
 }
+
+final recentSearchRepositoryProvider =
+    Provider<RecentSearchRepository>((ref) => RecentSearchRepository(ref: ref));

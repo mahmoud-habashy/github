@@ -34,8 +34,8 @@ class ErrorState extends StatelessWidget {
                   fit: BoxFit.cover,
                   repeat: false,
                 )),
-            Container(
-              margin: const EdgeInsets.all(AppConstants.defaultMargin),
+            Padding(
+              padding: const EdgeInsets.all(AppConstants.defaultPadding),
               child: Text(
                 title,
                 style: Theme.of(context)
@@ -44,9 +44,9 @@ class ErrorState extends StatelessWidget {
                     .copyWith(color: AppColors.white),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(
-                  horizontal: AppConstants.defaultMargin),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: AppConstants.defaultPadding),
               child: Text(
                 subtitle,
                 style: Theme.of(context)
@@ -57,9 +57,9 @@ class ErrorState extends StatelessWidget {
               ),
             ),
             if (onRefresh != null)
-              Container(
-                margin: const EdgeInsets.symmetric(
-                    vertical: AppConstants.defaultMargin * 2),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: AppConstants.defaultPadding * 2),
                 child: PrimaryButton(
                   text: AppStrings.errorPrimaryBtnText,
                   textColor: AppColors.white,

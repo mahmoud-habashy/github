@@ -27,7 +27,9 @@ class _UserStateNotifier extends StateNotifier<UserState> {
     bool result = false;
     try {
       state = UserState(isLoading: true);
-      UserModel? data = await UserRepository.getUserByName(userName: userName);
+      UserModel? data = await ref
+          .watch(userRepositoryProvider)
+          .getUserByName(userName: userName);
       if (data != null) {
         ref.watch(selectedUserProvider.notifier).setSelectedUser(data);
         await ref.watch(storedUserDataProvider.notifier).addRecentSearch(data);
